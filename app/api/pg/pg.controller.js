@@ -12,6 +12,66 @@ var request = require("request");
 var path = require('path'),
     templatesDir = path.join(__dirname, '../../templates');
 
+exports.UpdateFlat = function(req, res){
+    var PgModel = mongoose.model('Flat');
+    PgModel.findOne({"_id":req.body._id}, function (err, pg) {
+        if (err) {
+            res.send(send_response(null, true, "ERROR_USER_NOT_FOUND"));
+        } else {
+            var updated_pg = _.assign(pg, req.body);
+            updated_pg.save(function (err) {
+                if (err) {
+                    res.send(send_response(null, true, parse_error(err)));
+                } else {
+                    res.json({data: pg, is_error: false, message: 'Updated successfully'});
+                }
+            });
+        }
+    });
+};
+
+
+
+exports.getPendingHomesAndPGs = function(req,res){
+    var PgModel = mongoose.model('Pg');
+    var FlatModel = mongoose.model('Flat');
+    var areaListArry = [];
+
+    async.waterfall([
+        function(callback){
+            FlatModel.find({},function(err,areaListFlat){
+                if(err){
+                    callback(null,err);
+                } else {
+                    areaListFlat.forEach(function(item) { 
+                        areaListArry.push(item);
+                    })
+                    callback(null,areaListArry);
+                }
+            })
+        },function(areaListArry,callback){
+            PgModel.find({},function(err,areaListFlat){
+                if(err){
+                    callback(null,err);
+                } else {
+                    areaListFlat.forEach(function(item) { 
+                        areaListArry.push(item);
+                    })
+                    callback(null,areaListArry);
+                }
+            })
+        }
+    ],function(error,result){
+        if(error){
+           res.send(send_response(null,true,error)); 
+       } else {
+        res.send(send_response(result,false,"Success"));
+       }
+    })
+
+}
+
+
 exports.addPg = function (req, res) {
     var PgModel = mongoose.model('Pg');
     var data = req.body;

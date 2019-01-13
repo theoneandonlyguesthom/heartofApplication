@@ -11,8 +11,9 @@ router.get('/getAllPgswithoutlogin', controller.getAllPgs);
 router.get('/getHomeListByGender/:whom',controller.getHomeListByGender);
 router.get('/getHomeListByArea/:area',controller.getHomeListByArea);
 router.get('/getFilteredItem/:price/:tenantType',controller.getFilteredItem);
-router.post('/UpdatePg', auth.isAuthenticated(), controller.UpdatePg);
-
+router.post('/UpdatePg', controller.UpdatePg);
+router.post('/UpdateFlat',controller.UpdateFlat);
+router.get('/getPendingHomesAndPGs', controller.getPendingHomesAndPGs);
 // router.post('/send_payment', auth.isAuthenticated(), controller.SendPayment);
 // router.post('/directdebituserlist', auth.isAuthenticated(), controller.DirectDebitUserList);
 // router.post('/gettotalpayments', auth.isAuthenticated(), controller.GetTotalPayments);

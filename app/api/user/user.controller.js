@@ -111,7 +111,7 @@ exports.forgotpassword = function (req, res) {
 
     User.findOne({email: data.email}, function (err, user) {
         if (user == null) {
-            res.json({data: null, is_error: true, message: 'הודעת אימייל זו אינה רשומה'});
+            res.json({data: null, is_error: true, message: 'Email address not found please enter valid email'});
         } else {
             var today = new Date();
             //Generate Hash
@@ -237,7 +237,7 @@ exports.resetpasswordsubmit = function(req,res){
     
     Model.findOne({_id: user_id}, function (err, usr) {
         if (err) {
-            res.send(send_response(null, true, "לא נמצא משתמש"));
+            res.send(send_response(null, true, "User not found"));
         } else {
             usr.password = req.body.password;
             usr.save(function (err, saved) {
@@ -319,7 +319,7 @@ exports.UpdateUserReceviers = function(req, res){
                 if (err) {
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
-                    res.json({data: receiver, is_error: false, message: 'מקלט המשתמש עודכן בהצלחה'});
+                    res.json({data: receiver, is_error: false, message: 'User updated successfully'});
                 }
             });
         }

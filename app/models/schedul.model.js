@@ -12,9 +12,13 @@ var SchedulSchemaOptions = {
 
 var SchedulSchema = new Schema({
     
-    flat_id: {type: Schema.Types.ObjectId, ref: 'Flat', autopopulate: true},
-    // pg_id: {type: Schema.Types.ObjectId, ref: 'Pg', autopopulate: true},
-    user_id: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: true},
+    //flat_id: {type: Schema.Types.ObjectId, ref: 'Flat', autopopulate: true},
+    //pg_id: {type: Schema.Types.ObjectId, ref: 'Pg', autopopulate: true},
+name: {type: String, default: ''},
+    rent: {type: Number, default: ''},
+    area: {type: String, default: ''},
+    hometype: {type: String, default: ''},    
+user_id: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: true},
     date: { type: Date, default: Date.now },
     // time: { type: Date, default: Date.now },
     is_deleted: {type: Boolean, default: false},
