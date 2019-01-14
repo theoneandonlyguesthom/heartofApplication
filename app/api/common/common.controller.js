@@ -67,9 +67,9 @@ exports.createnew = function (req, res) {
 };
 
 exports.interestedTenant = function (req, res) {
-    var Model = mongoose.model("Interested");
+    var Model = mongoose.model('Interested');
     var data = new Model(req.body);
-    Model.find({$and : [ { $or : [ { flat_id: req.body.flat_id } ] },{ $or : [ { user_id: req.body.user_id } ] }] }, function (err, annos) {
+    Model.find({$and : [ { $or : [ { name: req.body.name } ] },{ $or : [ { user_id: req.body.user_id } ] }] }, function (err, annos) {
         if (err) {
             res.send(send_response(null, true, err));
         }
@@ -78,9 +78,11 @@ exports.interestedTenant = function (req, res) {
                 if (err) {
                     res.send(send_response(null, true, err.message));
                 } else {
-                    res.send(send_response(mod));
+                    return res.send(send_response(mod));
                 }
             });
+        } else {
+            return res.send(send_response(null,false,"Success"));
         }
 
     });
