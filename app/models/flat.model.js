@@ -15,6 +15,7 @@ var FlatSchema = new Schema({
     name: {type: String, default: ''},
     length: {type: Number, default: ''},
     rent: {type: Number, default: ''},
+    avatar: {type: String, default: ''},
     deposite: {type: Number, default: ''},
     area: {type: String, default: ''},
     homeaddress: {type: String, default: ''},
