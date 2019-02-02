@@ -28,15 +28,12 @@ exports.register = function (req, res) {
     }
     Model.findOne({phone_number: data.phone_number}, function (err, usr) {
         if (err) {
-            console.log("First Error");
             res.send(send_response(null, true, err));
         } else {
             if (usr) {
-                console.log("Phone number error");
                 res.send(send_response(null, true, 'Phone number already exists'));
             } else {                
                 if(!data.phone_number || !data.password){
-                console.log("Mendatory error");
                     return res.send(send_response(null, true, "All fields are mandatory")); // All fields are mandatory
                 }
                 else {
@@ -48,20 +45,16 @@ exports.register = function (req, res) {
                     data.otp = rn(options);
                     Model.create(data, function (err, user) {
                         if (err) {
-                console.log("second error");
                             res.send(send_response(null, true, err));
                         } else {
                             Model.findOne({_id: user._id}, '-salt -hashedPassword').exec(function (err, u) {
                                 if (u && !err) {
                                     var MessageOTP = data.otp + " Is your One Time Password for Book your dream home!"
                                     msg91.send(req.body.phone_number, MessageOTP, function(err, response){
-                                        console.log(err);
                                         console.log(response);
                                     });
                                     res.send(send_response(data, false, 'Successfully registered'));// successfully registered
                                 } else {
-                                    console.log(err);
-                                    console.log("errror");
                                     res.send(send_response(null, true, err.message));
                                 }
                             });
@@ -105,7 +98,7 @@ exports.getuserbyadmin = function (req, res) {
 };
 
 exports.forgotpassword = function (req, res) {
-
+// console.log("Here");
     var User = mongoose.model('User');
     var data = req.body;
 
@@ -118,8 +111,16 @@ exports.forgotpassword = function (req, res) {
             var secret = 'a3s5d46a5sd684asdaasdkn!@312';
             var new_password = randomstring.generate(10);
             user.password = new_password;
-            var transporter = nodemailer.createTransport('smtps://develapptodate%40gmail.com:0503636776@smtp.gmail.com');
-                var replace_var = {
+            // var transporter = nodemailer.createTransport('smtps://ndsnaren%40gmail.com:0503636776@smtp.gmail.com');
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: 'ndsnaren@gmail.com',
+                  pass: 'LenovoDolby1'
+                }
+              });    
+            
+            var replace_var = {
                     username: user.name,
                     password: new_password,
                     link: config.CLIENT_URL + 'api/users/resetpassword/'+ user.id
@@ -128,9 +129,9 @@ exports.forgotpassword = function (req, res) {
                 var templates = new EmailTemplates();
                 templates.render(templatesDir + '/forgopassword.html', replace_var, function (err, html, text) {
                     var mailOptions = {
-                        from: 'develapptodate@gmail.com', // sender address
+                        from: 'GuestHom', // sender address
                         to: user.email, // list of receivers
-                        subject: 'Request to reset password from CommonNG-Pro application', // Subject line
+                        subject: 'Reset password link from GuestHom', // Subject line
                         html: html // html body
                     };
 
@@ -160,8 +161,15 @@ exports.passwordresetrequest = function (req, res) {
         if (user == null) {
             res.json({data: null, is_error: true, message: 'email not exit'});
         } else { 
-            var transporter = nodemailer.createTransport('smtps://develapptodate%40gmail.com:0503636776@smtp.gmail.com');
-                var replace_var = {
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'ndsnaren@gmail.com',
+                    pass: 'LenovoDolby1'
+                }
+            }); 
+            
+            var replace_var = {
                     username: user.name,
                     password: new_password,
                     link: config.CLIENT_URL + 'api/users/resetpassword/'+ user.id
@@ -169,9 +177,9 @@ exports.passwordresetrequest = function (req, res) {
                 var templates = new EmailTemplates();
                 templates.render(templatesDir + '/forgopassword.html', replace_var, function (err, html, text) {
                     var mailOptions = {
-                        from: 'develapptodate@gmail.com', // sender address
+                        from: 'ndsnaren@gmail.com', // sender address
                         to: user.email, // receiver
-                        subject: 'Request to reset password from CommonNG-Pro application', // Subject line
+                        subject: 'Request to reset password from Guesthom', // Subject line
                         html: html // html body
                     };
 
@@ -404,7 +412,31 @@ exports.verifyOtp = function(req,res){
                 if (err) {
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
-                    res.send(send_response("varified"));
+
+                    var transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
+                            user: 'ndsnaren@gmail.com',
+                            pass: 'LenovoDolby1'
+                        }
+                    });
+                    
+                    var mailOptions = {
+                        from: 'GuestHom', // sender address
+                        to: 'guesthom@gmail.com', // list of receivers
+                        subject: 'New user registration', // Subject line
+                        html: html // html body
+                    };
+                
+                    // send mail with defined transport object
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            res.send(send_response("varified"));
+                        } else {
+                            res.send(send_response("varified"));
+                        }
+                    });
+                    
                 }
             });
         }
