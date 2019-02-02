@@ -430,8 +430,10 @@ exports.verifyOtp = function(req,res){
                     // send mail with defined transport object
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
+                            console.log("Here in error");
                             res.send(send_response("varified"));
                         } else {
+                            console.log("Here in succsess");
                             res.send(send_response("varified"));
                         }
                     });
