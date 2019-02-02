@@ -425,7 +425,6 @@ exports.verifyOtp = function(req,res){
                         from: 'GuestHom', // sender address
                         to: 'guesthom@gmail.com', // list of receivers
                         subject: 'New user registration', // Subject line
-                        html: html // html body
                     };
                 
                     // send mail with defined transport object
