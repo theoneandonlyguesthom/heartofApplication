@@ -32,7 +32,8 @@ exports.uploadimage = function (req, res) {
     var Model = mongoose.model(req.params.collection);
     Model.findOne({_id: req.params.id}, function (err, mod) {
         if (err) {
-            console.log(err);
+            // console.log(err);
+            console.log("Here");
             res.send(send_response(null, true, "Could not find " + req.params.collection));
         } else {
             var field = req.body.field;
@@ -40,9 +41,11 @@ exports.uploadimage = function (req, res) {
 
             mod.save(function (err, obj) {
                 if (err) {
+                    console.log("i am here")
                     console.log(err);
                     res.send(send_response(null, true, "Could not save file"));
                 } else {
+                    console.log("oooooo");
                     res.send(send_response(obj));
                 }
             });
@@ -51,7 +54,38 @@ exports.uploadimage = function (req, res) {
 };
 
 
-/* code by vishal vasani start ..*/ 
+
+exports.uploadimageMultiple = function(req,res){
+    let _id = req.body._id;
+	let images = {};
+    let i = 0;
+    let avatarFile = req.files[0].filename; 
+	for(i; i < req.files.length; i++) {
+		images[i] = req.files[i].filename;
+	}
+    
+    var Model = mongoose.model(req.params.collection);
+    Model.findOne({_id: req.params.id}, function (err, mod) {
+        if (err) {
+            // console.log(err);
+            res.send(send_response(null, true, "Could not find " + req.params.collection));
+        } else {
+            var field = req.body.field;
+            mod[field] = JSON.stringify(images);
+            mod['avatar'] = avatarFile;
+            mod.save(function (err, obj) {
+                if (err) {
+                    res.send(send_response(null, true, "Could not save file"));
+                } else {
+                    res.send(true );
+                }
+            });
+        }
+    });
+}
+
+
+
 
 exports.uploadMultiFile = function (req, res) {
     
@@ -95,7 +129,6 @@ exports.uploadMultiFile = function (req, res) {
 
 };
 
-/* code by vishal vasani end ..*/ 
 
 exports.image = function (req, res) {
     var filepath = path.join('public/upload/', req.params.filename);

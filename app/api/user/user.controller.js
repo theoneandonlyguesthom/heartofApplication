@@ -401,8 +401,10 @@ exports.verifyOtp = function(req,res){
     console.log(concateOtp);
     UserModel.findOne({ 'otp': concateOtp },function(err,userList){
         if(err){
+            console.log("Here at first console");
             res.send(send_response(null,true,err));
         } else if(!userList) {
+            console.log("Here second console");
             res.send(send_response("notFound"));
         } else {
             userList.status = true;
@@ -410,6 +412,7 @@ exports.verifyOtp = function(req,res){
             var updated_receiver = userList;
             updated_receiver.save(function (err) {
                 if (err) {
+                    console.log("sgsfgsdfgsf")
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
 
