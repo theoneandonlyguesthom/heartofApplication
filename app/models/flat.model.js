@@ -52,6 +52,7 @@ var FlatSchema = new Schema({
     status: {type: Boolean, default: 'false'},
     for_whom: {type: String, default: ''},
     home_type:{type: String, default: ''},
+    imageObj:{type: String, default: ''},
     dateAdded: { type: Date, default: Date.now }
 }, FlatSchemaOptions);
 
