@@ -206,6 +206,24 @@ exports.getHomeListByArea = function(req,res){
 
 }
 
+exports.filterAPI = function(req,res){
+    console.log(req.body);
+    var tenantType = req.body.tenantType;
+    var filterPrice = req.body.price;
+    if(req.body.homeTypeSubmit !== ''){
+        var Model = mongoose.model(req.body.homeTypeSubmit);
+        Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true},function(err,areaListFlat){
+            if(err){
+                res.send(send_response(null,true,error));
+            } else {
+                // areaListFlat.forEach(function(item) { 
+                //     areaListArry.push(item);
+                // })
+                res.send(send_response(areaListFlat,false,"Success"));
+            }
+        })
+    }
+}
  
 exports.getFilteredItem = function(req,res){
     var PgModel = mongoose.model('Pg');

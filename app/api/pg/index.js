@@ -14,6 +14,7 @@ router.get('/getFilteredItem/:price/:tenantType',controller.getFilteredItem);
 router.post('/UpdatePg', controller.UpdatePg);
 router.post('/UpdateFlat',controller.UpdateFlat);
 router.get('/getPendingHomesAndPGs', controller.getPendingHomesAndPGs);
+router.post('/filterAPI',controller.filterAPI);
 // router.post('/send_payment', auth.isAuthenticated(), controller.SendPayment);
 // router.post('/directdebituserlist', auth.isAuthenticated(), controller.DirectDebitUserList);
 // router.post('/gettotalpayments', auth.isAuthenticated(), controller.GetTotalPayments);
