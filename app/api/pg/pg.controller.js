@@ -209,18 +209,27 @@ exports.getHomeListByArea = function(req,res){
 exports.filterAPI = function(req,res){
     var tenantType = req.body.tenantType;
     var filterPrice = req.body.price;
+    var filterbadrooms = req.body.bhkSelected;
     if(req.body.homeTypeSubmit !== ''){
-        var Model = mongoose.model(req.body.homeTypeSubmit);
-        Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true},function(err,areaListFlat){
-            if(err){
-                res.send(send_response(null,true,error));
-            } else {
-                // areaListFlat.forEach(function(item) { 
-                //     areaListArry.push(item);
-                // })
-                res.send(send_response(areaListFlat,false,"Success"));
-            }
-        })
+        if(filterbadrooms !== 0){
+            var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true,bedrooms:filterbadrooms},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
+        } else {
+            var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
+        }
     } else {
         var PgModel = mongoose.model('Pg');
         var FlatModel = mongoose.model('Flat');
