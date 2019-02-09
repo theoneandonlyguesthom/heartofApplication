@@ -207,7 +207,6 @@ exports.getHomeListByArea = function(req,res){
 }
 
 exports.filterAPI = function(req,res){
-    console.log(req.body);
     var tenantType = req.body.tenantType;
     var filterPrice = req.body.price;
     if(req.body.homeTypeSubmit !== ''){
@@ -221,6 +220,45 @@ exports.filterAPI = function(req,res){
                 // })
                 res.send(send_response(areaListFlat,false,"Success"));
             }
+        })
+    } else {
+        var PgModel = mongoose.model('Pg');
+        var FlatModel = mongoose.model('Flat');
+        var priceValue = req.body.price;
+        var tenantType = req.body.tenantType;
+        var areaListArry = [];
+
+        async.waterfall([
+            function(callback){
+                FlatModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,status:true},function(err,areaListFlat){
+                    console.log(areaListFlat);
+                    if(err){
+                        callback(null,err);
+                    } else {
+                        areaListFlat.forEach(function(item) { 
+                            areaListArry.push(item);
+                        })
+                        callback(null,areaListArry);
+                    }
+                })
+            },function(areaListArry,callback){
+                PgModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,status:true},function(err,areaListFlat){
+                    if(err){
+                        callback(null,err);
+                    } else {
+                        areaListFlat.forEach(function(item) { 
+                            areaListArry.push(item);
+                        })
+                        callback(null,areaListArry);
+                    }
+                })
+            }
+        ],function(error,result){
+            if(error){
+            res.send(send_response(null,true,error)); 
+        } else {
+            res.send(send_response(result,false,"Success"));
+        }
         })
     }
 }
