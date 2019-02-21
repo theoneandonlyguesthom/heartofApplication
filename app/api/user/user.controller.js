@@ -17,6 +17,7 @@ var fs = require('fs');
 var rn = require('random-number');
 var twilio = require('twilio');
 var msg91 = require("msg91")("248937AQnwe6yw39W5bfa3302", "8347635563", "106" );
+const sgMail = require('@sendgrid/mail');
 
 exports.register = function (req, res) {
     var Model = mongoose.model('User');
@@ -396,10 +397,9 @@ exports.sendOtp = function(req,res){
 
 exports.verifyOtp = function(req,res){
     var UserModel = mongoose.model('User');
-    console.log(req.body.firstDigit + req.body.secondDigit + req.body.thirdDigit + req.body.forthDigit);
     var concateOtp = req.body.firstDigit + req.body.secondDigit + req.body.thirdDigit + req.body.forthDigit;
-    console.log(concateOtp);
     UserModel.findOne({ 'otp': concateOtp },function(err,userList){
+        console.log(userList);
         if(err){
             console.log("Here at first console");
             res.send(send_response(null,true,err));
@@ -416,30 +416,41 @@ exports.verifyOtp = function(req,res){
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
 
-                    var transporter = nodemailer.createTransport({
-                        service: 'gmail',
-                        auth: {
-                            user: 'ndsnaren@gmail.com',
-                            pass: 'LenovoDolby1'
-                        }
-                    });
+                    // const sgMail = require('@sendgrid/mail');
+                    // sgMail.setApiKey('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');
+                    // const msg = {
+                    // to: 'test@example.com',
+                    // from: 'test@example.com',
+                    // subject: 'Sending with SendGrid is Fun',
+                    // text: 'and easy to do anywhere, even with Node.js',
+                    // html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+                    // };
+                    // sgMail.send(msg);
+
                     
-                    var mailOptions = {
-                        from: 'GuestHom', // sender address
-                        to: 'guesthom@gmail.com', // list of receivers
-                        subject: 'New user registration', // Subject line
+                    // const sendgrid = require("sendgrid")("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");
+                    // const email = new sendgrid.Email();
+
+                    // email.addTo("test@sendgrid.com");
+                    // email.setFrom("ndsnaren@gmail.com");
+                    // email.setSubject("Sending an email with SendGrid is Fun");
+                    // email.setHtml("and easy to do anywhere, even with Node.js");
+
+                    // sendgrid.send(email);
+
+                    // console.log("Here in succsess");
+                    // res.send(send_response("varified"));
+
+                    
+                    sgMail.setApiKey('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');
+                    const msg = {
+                    to: 'test@sendgrid.com',
+                    from: 'ndsnaren@gmail.com',
+                    subject: 'Sending with SendGrid is Fun',
+                    text: 'and easy to do anywhere, even with Node.js',
+                    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
                     };
-                
-                    // send mail with defined transport object
-                    transporter.sendMail(mailOptions, function (error, info) {
-                        if (error) {
-                            console.log("Here in error");
-                            res.send(send_response("varified"));
-                        } else {
-                            console.log("Here in succsess");
-                            res.send(send_response("varified"));
-                        }
-                    });
+                    sgMail.send(msg);
                     
                 }
             });
