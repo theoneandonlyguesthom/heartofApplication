@@ -439,7 +439,7 @@ exports.verifyOtp = function(req,res){
                     // sendgrid.send(email);
 
                     // console.log("Here in succsess");
-                    // res.send(send_response("varified"));
+                    res.send(send_response("varified"));
 
                     
                     sgMail.setApiKey('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');
