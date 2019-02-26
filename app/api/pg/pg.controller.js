@@ -235,11 +235,12 @@ exports.filterAPI = function(req,res){
         var FlatModel = mongoose.model('Flat');
         var priceValue = req.body.price;
         var tenantType = req.body.tenantType;
+        var interiortype = req.body.interiortype;
         var areaListArry = [];
 
         async.waterfall([
             function(callback){
-                FlatModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,status:true},function(err,areaListFlat){
+                FlatModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,interiortype:interiortype,status:true},function(err,areaListFlat){
                     console.log(areaListFlat);
                     if(err){
                         callback(null,err);
