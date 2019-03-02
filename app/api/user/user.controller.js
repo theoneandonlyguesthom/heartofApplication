@@ -17,7 +17,7 @@ var fs = require('fs');
 var rn = require('random-number');
 var twilio = require('twilio');
 var msg91 = require("msg91")("248937AQnwe6yw39W5bfa3302", "8347635563", "106" );
-const sgMail = require('@sendgrid/mail');
+var nodemailer = require('nodemailer');
 
 exports.register = function (req, res) {
     var Model = mongoose.model('User');
@@ -388,6 +388,10 @@ exports.sendOtp = function(req,res){
                 if (err) {
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
+                    var MessageOTP = userList.otp + " Is your One Time Password for Book your dream home!"
+                    msg91.send(req.body.phone_number, MessageOTP, function(err, response){
+                        console.log(response);
+                    });
                     res.send(send_response(userList));
                 }
             });
@@ -415,43 +419,7 @@ exports.verifyOtp = function(req,res){
                     console.log("sgsfgsdfgsf")
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
-
-                    // const sgMail = require('@sendgrid/mail');
-                    // sgMail.setApiKey('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');
-                    // const msg = {
-                    // to: 'test@example.com',
-                    // from: 'test@example.com',
-                    // subject: 'Sending with SendGrid is Fun',
-                    // text: 'and easy to do anywhere, even with Node.js',
-                    // html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-                    // };
-                    // sgMail.send(msg);
-
-                    
-                    // const sendgrid = require("sendgrid")("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");
-                    // const email = new sendgrid.Email();
-
-                    // email.addTo("test@sendgrid.com");
-                    // email.setFrom("ndsnaren@gmail.com");
-                    // email.setSubject("Sending an email with SendGrid is Fun");
-                    // email.setHtml("and easy to do anywhere, even with Node.js");
-
-                    // sendgrid.send(email);
-
-                    // console.log("Here in succsess");
                     res.send(send_response("varified"));
-
-                    
-                    sgMail.setApiKey('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');
-                    const msg = {
-                    to: 'test@sendgrid.com',
-                    from: 'ndsnaren@gmail.com',
-                    subject: 'Sending with SendGrid is Fun',
-                    text: 'and easy to do anywhere, even with Node.js',
-                    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-                    };
-                    sgMail.send(msg);
-                    
                 }
             });
         }

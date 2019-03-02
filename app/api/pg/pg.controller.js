@@ -210,8 +210,9 @@ exports.filterAPI = function(req,res){
     var tenantType = req.body.tenantType;
     var filterPrice = req.body.price;
     var filterbadrooms = req.body.bhkSelected;
-    if(req.body.homeTypeSubmit !== ''){
-        if(filterbadrooms !== 0){
+    var interiortype = req.body.interiortype;
+    if(req.body.homeTypeSubmit !== '' && req.body.homeTypeSubmit === 'Flat'){
+        if(filterbadrooms !== 0 && interiortype === ''){
             var Model = mongoose.model(req.body.homeTypeSubmit);
             Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true,bedrooms:filterbadrooms},function(err,areaListFlat){
                 if(err){
@@ -220,9 +221,27 @@ exports.filterAPI = function(req,res){
                     res.send(send_response(areaListFlat,false,"Success"));
                 }
             })
+        } else if(filterbadrooms !== 0 && interiortype !== ''){
+            var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true,bedrooms:filterbadrooms,interiortype:interiortype},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
+        }  else if(filterbadrooms === 0 && interiortype !== ''){
+            var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true,interiortype:interiortype},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
         } else {
             var Model = mongoose.model(req.body.homeTypeSubmit);
-            Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true},function(err,areaListFlat){
+            Model.find({rent: { $gte :  1000, $lte : filterPrice},for_whom:tenantType,status:true},function(err,areaListFlat){
                 if(err){
                     res.send(send_response(null,true,error));
                 } else {
@@ -230,18 +249,25 @@ exports.filterAPI = function(req,res){
                 }
             })
         }
+    } else if(req.body.homeTypeSubmit !== '' && req.body.homeTypeSubmit === 'Pg'){
+        var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  1000, $lte : filterPrice},for_whom:tenantType,status:true},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
     } else {
         var PgModel = mongoose.model('Pg');
         var FlatModel = mongoose.model('Flat');
         var priceValue = req.body.price;
         var tenantType = req.body.tenantType;
-        var interiortype = req.body.interiortype;
         var areaListArry = [];
 
         async.waterfall([
             function(callback){
-                FlatModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,interiortype:interiortype,status:true},function(err,areaListFlat){
-                    console.log(areaListFlat);
+                FlatModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,status:true},function(err,areaListFlat){
                     if(err){
                         callback(null,err);
                     } else {
@@ -283,7 +309,6 @@ exports.getFilteredItem = function(req,res){
     async.waterfall([
         function(callback){
             FlatModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,status:true},function(err,areaListFlat){
-                console.log(areaListFlat);
                 if(err){
                     callback(null,err);
                 } else {
