@@ -7,6 +7,10 @@ var router = express.Router();
 
 router.post('/addFeedback', auth.isAuthenticated(), controller.addFeedback);
 router.get('/getFeedback', auth.isAuthenticated(), controller.getFeedback);
+router.post('/addMessage', controller.addMessage);
+router.get('/getMessages', controller.getMessages);
+router.post('/addNewslatter', controller.addNewslatter);
+router.get('/getNewslatter', controller.getNewslatter);
 // router.post('/send_payment', auth.isAuthenticated(), controller.SendPayment);
 // router.post('/directdebituserlist', auth.isAuthenticated(), controller.DirectDebitUserList);
 // router.post('/gettotalpayments', auth.isAuthenticated(), controller.GetTotalPayments);

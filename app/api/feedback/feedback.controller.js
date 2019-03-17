@@ -27,9 +27,57 @@ exports.addFeedback = function (req, res) {
 };
 
 
+exports.addMessage = function (req, res) {
+    var MessageModel = mongoose.model('Message');
+    var data = req.body;
+    MessageModel.create(data, function (err, user) {
+        if (err) {
+            res.send(send_response(null, true, err));
+        } else {
+            res.send(send_response(null, true, "Message sent successfully"));
+        }
+    });
+};
+
+exports.addNewslatter = function (req, res) {
+    var NewslatterModel = mongoose.model('Newslatter');
+    var data = req.body;
+    NewslatterModel.create(data, function (err, user) {
+        if (err) {
+            res.send(send_response(null, true, err));
+        } else {
+            res.send(send_response(null, true, "Thanks for subscribe"));
+        }
+    });
+};
+
+
 exports.getFeedback = function(req,res){
     var FeedbackModel = mongoose.model('Feedback');
     FeedbackModel.find({},function(err,feddbackList){
+        if(err){
+            res.send(send_response(null,true,err));
+        } else {
+            res.send(send_response(feddbackList));
+        }
+    })
+}
+
+exports.getMessages = function(req,res){
+    var FeedbackModel = mongoose.model('Message');
+    FeedbackModel.find({},function(err,feddbackList){
+        if(err){
+            res.send(send_response(null,true,err));
+        } else {
+            res.send(send_response(feddbackList));
+        }
+    })
+}
+
+
+exports.getNewslatter = function(req,res){
+    var NewslatterModel = mongoose.model('Newslatter');
+    NewslatterModel.find({},function(err,feddbackList){
         if(err){
             res.send(send_response(null,true,err));
         } else {

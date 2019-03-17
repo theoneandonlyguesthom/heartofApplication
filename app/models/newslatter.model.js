@@ -5,17 +5,17 @@ var Schema = mongoose.Schema;
 var crypto = require('crypto');
 var autopopulate = require('mongoose-autopopulate');
 
-var AboutSchemaOptions = {
+var NewslatterSchemaOptions = {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
 };
 
-var AboutSchema = new Schema({
+var NewslatterSchema = new Schema({
     email: {type: String, default: ''},
     is_deleted: {type: Boolean, default: false},
     dateAdded: { type: Date, default: Date.now }
-}, AboutSchemaOptions);
+}, NewslatterSchemaOptions);
 
-AboutSchema.plugin(autopopulate);
+NewslatterSchema.plugin(autopopulate);
 
-module.exports = mongoose.model('About', AboutSchema);
+module.exports = mongoose.model('Newslatter', NewslatterSchema);
