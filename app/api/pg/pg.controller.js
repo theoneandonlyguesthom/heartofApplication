@@ -11,6 +11,7 @@ var config = require('../../config/local.env');
 var request = require("request");
 var path = require('path'),
     templatesDir = path.join(__dirname, '../../templates');
+var msg91 = require("msg91")("248937AQnwe6yw39W5bfa3302", "8347635563", "106" );
 
 exports.UpdateFlat = function(req, res){
     var PgModel = mongoose.model('Flat');
@@ -23,6 +24,18 @@ exports.UpdateFlat = function(req, res){
                 if (err) {
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
+
+                    PgModel.findOne({"_id":req.body._id}, function (err, userObject) {
+                        if (err) {
+                            res.send(send_response(null, true, "ERROR_USER_NOT_FOUND"));
+                        } else {
+                            const ownerMobileNumber = userObject.owner_id.phone_number;
+                            const MessageText = "Congratulations! Your " + userObject.area + "'s " + userObject.name + " Flat approved now user can see and book your Flat. Message sent by Guesthom team Thanks for connecting with us";
+                            msg91.send(ownerMobileNumber, MessageText, function(err, response){
+                                console.log(response);
+                            });
+                        }
+                    });
                     res.json({data: pg, is_error: false, message: 'Updated successfully'});
                 }
             });
@@ -353,6 +366,18 @@ exports.UpdatePg = function(req, res){
                 if (err) {
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
+
+                    PgModel.findOne({"_id":req.body._id}, function (err, userObject) {
+                        if (err) {
+                            res.send(send_response(null, true, "ERROR_USER_NOT_FOUND"));
+                        } else {
+                            const ownerMobileNumber = userObject.owner_id.phone_number;
+                            const MessageText = "Congratulations! Your " + userObject.area + "'s " + userObject.name + " PG approved now user can see and book your PG. Message sent by Guesthom team Thanks for connecting with us";
+                            msg91.send(ownerMobileNumber, MessageText, function(err, response){
+                                console.log(response);
+                            });
+                        }
+                    });
                     res.json({data: pg, is_error: false, message: 'Updated successfully'});
                 }
             });
