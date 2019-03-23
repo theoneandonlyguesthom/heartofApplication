@@ -67,25 +67,32 @@ exports.createnew = function (req, res) {
 };
 
 exports.interestedTenant = function (req, res) {
-    var Model = mongoose.model('Interested');
-    var data = new Model(req.body);
-    Model.find({$and : [ { $or : [ { name: req.body.name } ] },{ $or : [ { user_id: req.body.user_id } ] }] }, function (err, annos) {
-        if (err) {
-            res.send(send_response(null, true, err));
-        }
-        if(!annos.length){
-            Model.create(data, function (err, mod) {
-                if (err) {
-                    res.send(send_response(null, true, err.message));
-                } else {
-                    return res.send(send_response(mod));
-                }
-            });
-        } else {
-            return res.send(send_response(null,false,"Success"));
-        }
 
-    });
+    if(req.body.owner_id !== req.body.user_id){
+        var Model = mongoose.model('Interested');
+        var data = new Model(req.body);
+        Model.find({$and : [ { $or : [ { name: req.body.name } ] },{ $or : [ { user_id: req.body.user_id } ] }] }, function (err, annos) {
+            if (err) {
+                res.send(send_response(null, true, err));
+            }
+            if(!annos.length){
+                Model.create(data, function (err, mod) {
+                    if (err) {
+                        res.send(send_response(null, true, err.message));
+                    } else {
+                        return res.send(send_response(mod));
+                    }
+                });
+            } else {
+                return res.send(send_response(null,false,"Success"));
+            }
+    
+        });
+    } else {
+        return res.send(send_response(null,false,"User is Owner"));
+    }
+
+   
 };
 
 exports.findInterestedTenantList = function (req, res) {
