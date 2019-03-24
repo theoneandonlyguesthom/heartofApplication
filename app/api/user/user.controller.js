@@ -48,11 +48,25 @@ exports.register = function (req, res) {
                         if (err) {
                             res.send(send_response(null, true, err));
                         } else {
+                            var html = "New User regisert with following Mobile number <b>" + req.body.phone_number + '</b> and Name <b> ' + req.body.first_name;
+    
+                            var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465"); 
+                                var mailOptions = {
+                                    from: 'guesthom@gmail.com', // sender address
+                                    to: 'guesthom@gmail.com', // list of receivers
+                                    subject: "New pg request",
+                                    html : html 
+                                };
                             Model.findOne({_id: user._id}, '-salt -hashedPassword').exec(function (err, u) {
                                 if (u && !err) {
                                     var MessageOTP = data.otp + " Is your One Time Password for Book your dream home!"
                                     msg91.send(req.body.phone_number, MessageOTP, function(err, response){
                                         console.log(response);
+                                    });
+                                    transporter.sendMail(mailOptions, function (error, info) {
+                                        if (error) {
+                                            console.log(error + "Error");
+                                        }
                                     });
                                     res.send(send_response(data, false, 'Successfully registered'));// successfully registered
                                 } else {
@@ -112,14 +126,8 @@ exports.forgotpassword = function (req, res) {
             var secret = 'a3s5d46a5sd684asdaasdkn!@312';
             var new_password = randomstring.generate(10);
             user.password = new_password;
-            // var transporter = nodemailer.createTransport('smtps://ndsnaren%40gmail.com:0503636776@smtp.gmail.com');
-            var transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                  user: 'ndsnaren@gmail.com',
-                  pass: 'LenovoDolby1'
-                }
-              });    
+            var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465");
+               
             
             var replace_var = {
                     username: user.name,
@@ -162,13 +170,7 @@ exports.passwordresetrequest = function (req, res) {
         if (user == null) {
             res.json({data: null, is_error: true, message: 'email not exit'});
         } else { 
-            var transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'ndsnaren@gmail.com',
-                    pass: 'LenovoDolby1'
-                }
-            }); 
+            var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465"); 
             
             var replace_var = {
                     username: user.name,

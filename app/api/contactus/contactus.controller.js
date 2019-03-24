@@ -21,7 +21,7 @@ exports.ContactUs = function(req, res){
         if (err) {
             res.send(send_response(null, true, err));
         } else {
-            var transporter = nodemailer.createTransport('smtps://develapptodate%40gmail.com:0503636776@smtp.gmail.com');
+            var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465");
             var new_date = moment(u.dateAdded).format('DD/MM/YYYY');
             var replace_var = {
                 name: u.name,
@@ -33,8 +33,8 @@ exports.ContactUs = function(req, res){
             templates.render(templatesDir + '/contactus.html', replace_var, function (err, html, text) {
                 var mailOptions = {
                         from: '""', // sender address
-                        to: 'develapptodate@gmail.com', // list of receivers
-                        subject: 'פניה חדשה מאפליקציית קנטינה', // Subject line
+                        to: 'guesthom@gmail.com', // list of receivers
+                        subject: 'Contact us', // Subject line
                         html: html // html body
                     };
 

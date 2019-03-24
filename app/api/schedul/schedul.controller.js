@@ -17,7 +17,7 @@ exports.addSchedul = function (req, res) {
     var data = req.body;
     var userData = req.user;
     var html = ' Create schedule on  '+ data.date ;
-    var transporter = nodemailer.createTransport('smtps://develapptodate%40gmail.com:0503636776@smtp.gmail.com');
+    var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465");
         var mailOptions = {
             from: 'guesthom@gmail.com', // sender address
             to: 'guesthom@gmail.com', // list of receivers
