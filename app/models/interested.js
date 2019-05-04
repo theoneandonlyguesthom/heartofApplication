@@ -12,8 +12,13 @@ var InterestedSchemaOptions = {
 
 var InterestedSchema = new Schema({
     
-    flat_id: {type: Schema.Types.ObjectId, ref: 'Flat', autopopulate: true},
+    // flat_id: {type: Schema.Types.ObjectId, ref: 'Flat', autopopulate: true},
     user_id: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: true},
+    name: {type: String, default: ''},
+    rent: {type: Number, default: ''},
+    area: {type: String, default: ''},
+    hometype: {type: String, default: ''},   
+    avatar: {type: String, default: ''}, 
     owner_id: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: true},
     date: { type: Date, default: Date.now },
     is_deleted: {type: Boolean, default: false},

@@ -18,7 +18,7 @@ exports.addFlat = function (req, res) {
     var userData = req.user;
     data.owner_id = userData._id;
     var html = userData.first_name + ' ' + userData.last_name +  ' Added new flate in '+ data.area + ' area';
-    var transporter = nodemailer.createTransport('smtps://develapptodate%40gmail.com:0503636776@smtp.gmail.com');
+    var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465");
         var mailOptions = {
             from: 'guesthom@gmail.com', // sender address
             to: 'guesthom@gmail.com', // list of receivers

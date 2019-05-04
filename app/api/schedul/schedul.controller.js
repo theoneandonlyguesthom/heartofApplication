@@ -19,7 +19,6 @@ exports.addSchedul = function (req, res) {
     var userData = req.user;
     var html = ' Create schedule on  '+ data.date ;
     var mailData = {userName: '', userMobile: '', ownerName: '', ownerMobile: '', PGName: '', areaName: '', onDate: ''};
-    
     SchedulModel.create(data, function (err, user) {
         console.log(user);
         if (err) {

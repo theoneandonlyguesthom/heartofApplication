@@ -4,6 +4,7 @@ var express = require('express');
 
 var multer = require('multer');
 var upload = multer({dest: 'public/upload/'})
+const uploadFlat = multer({dest:'public/upload/'});
 
 var controller = require('./upload.controller');
 var config = require('../../config/environment');
@@ -15,6 +16,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.post('/upload/:collection/:id', upload.single('file'), controller.uploadimage);
+router.post('/upload/multiple/:collection/:id', upload.array('file'), controller.uploadimageMultiple);
 router.post('/upload/multiimg/:collection/:id', upload.any(), controller.uploadMultiFile);
 router.post('/', upload.single('file'), controller.uploadimage);
 router.post('/upload', upload.single('file'), controller.uploadFile);

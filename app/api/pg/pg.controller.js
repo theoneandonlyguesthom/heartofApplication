@@ -11,6 +11,79 @@ var config = require('../../config/local.env');
 var request = require("request");
 var path = require('path'),
     templatesDir = path.join(__dirname, '../../templates');
+var msg91 = require("msg91")("248937AQnwe6yw39W5bfa3302", "8347635563", "106" );
+
+exports.UpdateFlat = function(req, res){
+    var PgModel = mongoose.model('Flat');
+    PgModel.findOne({"_id":req.body._id}, function (err, pg) {
+        if (err) {
+            res.send(send_response(null, true, "ERROR_USER_NOT_FOUND"));
+        } else {
+            var updated_pg = _.assign(pg, req.body);
+            updated_pg.save(function (err) {
+                if (err) {
+                    res.send(send_response(null, true, parse_error(err)));
+                } else {
+
+                    PgModel.findOne({"_id":req.body._id}, function (err, userObject) {
+                        if (err) {
+                            res.send(send_response(null, true, "ERROR_USER_NOT_FOUND"));
+                        } else {
+                            const ownerMobileNumber = userObject.owner_id.phone_number;
+                            const MessageText = "Congratulations! Your " + userObject.area + "'s " + userObject.name + " Flat approved now user can see and book your Flat. Message sent by Guesthom team Thanks for connecting with us";
+                            msg91.send(ownerMobileNumber, MessageText, function(err, response){
+                                console.log(response);
+                            });
+                        }
+                    });
+                    res.json({data: pg, is_error: false, message: 'Updated successfully'});
+                }
+            });
+        }
+    });
+};
+
+
+
+exports.getPendingHomesAndPGs = function(req,res){
+    var PgModel = mongoose.model('Pg');
+    var FlatModel = mongoose.model('Flat');
+    var areaListArry = [];
+
+    async.waterfall([
+        function(callback){
+            FlatModel.find({},function(err,areaListFlat){
+                if(err){
+                    callback(null,err);
+                } else {
+                    areaListFlat.forEach(function(item) { 
+                        areaListArry.push(item);
+                    })
+                    callback(null,areaListArry);
+                }
+            })
+        },function(areaListArry,callback){
+            PgModel.find({},function(err,areaListFlat){
+                if(err){
+                    callback(null,err);
+                } else {
+                    areaListFlat.forEach(function(item) { 
+                        areaListArry.push(item);
+                    })
+                    callback(null,areaListArry);
+                }
+            })
+        }
+    ],function(error,result){
+        if(error){
+           res.send(send_response(null,true,error)); 
+       } else {
+        res.send(send_response(result,false,"Success"));
+       }
+    })
+
+}
+
 
 const sgMail = require('@sendgrid/mail');
 var EmailTemplates = require('swig-email-templates');
@@ -23,7 +96,7 @@ exports.addPg = function (req, res) {
     data.owner_id = userData._id;
     var html = userData.first_name + ' ' + userData.last_name +  ' Added new pg in '+ data.area + ' area';
     
-    var transporter = nodemailer.createTransport('smtps://develapptodate%40gmail.com:0503636776@smtp.gmail.com');
+    var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465");
         var mailOptions = {
             from: 'guesthom@gmail.com', // sender address
             to: 'guesthom@gmail.com', // list of receivers
@@ -185,7 +258,98 @@ exports.getPendingHomesAndPGs = function(req,res){
         res.send(send_response(result,false,"Success"));
        }
     })
+}
+exports.filterAPI = function(req,res){
+    var tenantType = req.body.tenantType;
+    var filterPrice = req.body.price;
+    var filterbadrooms = req.body.bhkSelected;
+    var interiortype = req.body.interiortype;
+    if(req.body.homeTypeSubmit !== '' && req.body.homeTypeSubmit === 'Flat'){
+        if(filterbadrooms !== 0 && interiortype === ''){
+            var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true,bedrooms:filterbadrooms},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
+        } else if(filterbadrooms !== 0 && interiortype !== ''){
+            var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true,bedrooms:filterbadrooms,interiortype:interiortype},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
+        }  else if(filterbadrooms === 0 && interiortype !== ''){
+            var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  5000, $lte : filterPrice},for_whom:tenantType,status:true,interiortype:interiortype},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
+        } else {
+            var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  1000, $lte : filterPrice},for_whom:tenantType,status:true},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
+        }
+    } else if(req.body.homeTypeSubmit !== '' && req.body.homeTypeSubmit === 'Pg'){
+        var Model = mongoose.model(req.body.homeTypeSubmit);
+            Model.find({rent: { $gte :  1000, $lte : filterPrice},for_whom:tenantType,status:true},function(err,areaListFlat){
+                if(err){
+                    res.send(send_response(null,true,error));
+                } else {
+                    res.send(send_response(areaListFlat,false,"Success"));
+                }
+            })
+    } else {
+        var PgModel = mongoose.model('Pg');
+        var FlatModel = mongoose.model('Flat');
+        var priceValue = req.body.price;
+        var tenantType = req.body.tenantType;
+        var areaListArry = [];
 
+        async.waterfall([
+            function(callback){
+                FlatModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,status:true},function(err,areaListFlat){
+                    if(err){
+                        callback(null,err);
+                    } else {
+                        areaListFlat.forEach(function(item) { 
+                            areaListArry.push(item);
+                        })
+                        callback(null,areaListArry);
+                    }
+                })
+            },function(areaListArry,callback){
+                PgModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,status:true},function(err,areaListFlat){
+                    if(err){
+                        callback(null,err);
+                    } else {
+                        areaListFlat.forEach(function(item) { 
+                            areaListArry.push(item);
+                        })
+                        callback(null,areaListArry);
+                    }
+                })
+            }
+        ],function(error,result){
+            if(error){
+            res.send(send_response(null,true,error)); 
+        } else {
+            res.send(send_response(result,false,"Success"));
+        }
+        })
+    }
 }
  
 exports.getFilteredItem = function(req,res){
@@ -198,7 +362,6 @@ exports.getFilteredItem = function(req,res){
     async.waterfall([
         function(callback){
             FlatModel.find({rent: { $gte :  5000, $lte : priceValue},for_whom:tenantType,status:true},function(err,areaListFlat){
-                console.log(areaListFlat);
                 if(err){
                     callback(null,err);
                 } else {
@@ -241,6 +404,18 @@ exports.UpdatePg = function(req, res){
                 if (err) {
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
+
+                    PgModel.findOne({"_id":req.body._id}, function (err, userObject) {
+                        if (err) {
+                            res.send(send_response(null, true, "ERROR_USER_NOT_FOUND"));
+                        } else {
+                            const ownerMobileNumber = userObject.owner_id.phone_number;
+                            const MessageText = "Congratulations! Your " + userObject.area + "'s " + userObject.name + " PG approved now user can see and book your PG. Message sent by Guesthom team Thanks for connecting with us";
+                            msg91.send(ownerMobileNumber, MessageText, function(err, response){
+                                console.log(response);
+                            });
+                        }
+                    });
                     res.json({data: pg, is_error: false, message: 'Updated successfully'});
                 }
             });

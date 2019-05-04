@@ -13,8 +13,10 @@ var FlatSchemaOptions = {
 var FlatSchema = new Schema({
     owner_id: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: true},
     name: {type: String, default: ''},
+    interiortype: {type: String, default: ''},
     length: {type: Number, default: ''},
     rent: {type: Number, default: ''},
+    avatar: {type: String, default: ''},
     deposite: {type: Number, default: ''},
     area: {type: String, default: ''},
     homeaddress: {type: String, default: ''},
@@ -51,6 +53,7 @@ var FlatSchema = new Schema({
     status: {type: Boolean, default: 'false'},
     for_whom: {type: String, default: ''},
     home_type:{type: String, default: ''},
+    imageObj:{type: String, default: ''},
     dateAdded: { type: Date, default: Date.now }
 }, FlatSchemaOptions);
 

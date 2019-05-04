@@ -43,6 +43,7 @@ var PgSchema = new Schema({
     status: {type: Boolean, default: 'false'},
     home_type:{type: String, default: ''},
     for_whom: {type: String, default: ''},
+    imageObj:{type: String, default: ''},
     dateAdded: { type: Date, default: Date.now }
 }, PgSchemaOptions);
 

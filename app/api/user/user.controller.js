@@ -17,6 +17,7 @@ var fs = require('fs');
 var rn = require('random-number');
 var twilio = require('twilio');
 var msg91 = require("msg91")("248937AQnwe6yw39W5bfa3302", "8347635563", "106" );
+var nodemailer = require('nodemailer');
 
 exports.register = function (req, res) {
     var Model = mongoose.model('User');
@@ -28,15 +29,12 @@ exports.register = function (req, res) {
     }
     Model.findOne({phone_number: data.phone_number}, function (err, usr) {
         if (err) {
-            console.log("First Error");
             res.send(send_response(null, true, err));
         } else {
             if (usr) {
-                console.log("Phone number error");
                 res.send(send_response(null, true, 'Phone number already exists'));
             } else {                
                 if(!data.phone_number || !data.password){
-                console.log("Mendatory error");
                     return res.send(send_response(null, true, "All fields are mandatory")); // All fields are mandatory
                 }
                 else {
@@ -48,20 +46,30 @@ exports.register = function (req, res) {
                     data.otp = rn(options);
                     Model.create(data, function (err, user) {
                         if (err) {
-                console.log("second error");
                             res.send(send_response(null, true, err));
                         } else {
+                            var html = "New User regisert with following Mobile number <b>" + req.body.phone_number + '</b> and Name <b> ' + req.body.first_name;
+    
+                            var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465"); 
+                                var mailOptions = {
+                                    from: 'guesthom@gmail.com', // sender address
+                                    to: 'guesthom@gmail.com', // list of receivers
+                                    subject: "New pg request",
+                                    html : html 
+                                };
                             Model.findOne({_id: user._id}, '-salt -hashedPassword').exec(function (err, u) {
                                 if (u && !err) {
                                     var MessageOTP = data.otp + " Is your One Time Password for Book your dream home!"
                                     msg91.send(req.body.phone_number, MessageOTP, function(err, response){
-                                        console.log(err);
                                         console.log(response);
+                                    });
+                                    transporter.sendMail(mailOptions, function (error, info) {
+                                        if (error) {
+                                            console.log(error + "Error");
+                                        }
                                     });
                                     res.send(send_response(data, false, 'Successfully registered'));// successfully registered
                                 } else {
-                                    console.log(err);
-                                    console.log("errror");
                                     res.send(send_response(null, true, err.message));
                                 }
                             });
@@ -105,21 +113,23 @@ exports.getuserbyadmin = function (req, res) {
 };
 
 exports.forgotpassword = function (req, res) {
-
+// console.log("Here");
     var User = mongoose.model('User');
     var data = req.body;
 
     User.findOne({email: data.email}, function (err, user) {
         if (user == null) {
-            res.json({data: null, is_error: true, message: 'הודעת אימייל זו אינה רשומה'});
+            res.json({data: null, is_error: true, message: 'Email address not found please enter valid email'});
         } else {
             var today = new Date();
             //Generate Hash
             var secret = 'a3s5d46a5sd684asdaasdkn!@312';
             var new_password = randomstring.generate(10);
             user.password = new_password;
-            var transporter = nodemailer.createTransport('smtps://develapptodate%40gmail.com:0503636776@smtp.gmail.com');
-                var replace_var = {
+            var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465");
+               
+            
+            var replace_var = {
                     username: user.name,
                     password: new_password,
                     link: config.CLIENT_URL + 'api/users/resetpassword/'+ user.id
@@ -128,9 +138,9 @@ exports.forgotpassword = function (req, res) {
                 var templates = new EmailTemplates();
                 templates.render(templatesDir + '/forgopassword.html', replace_var, function (err, html, text) {
                     var mailOptions = {
-                        from: 'develapptodate@gmail.com', // sender address
+                        from: 'GuestHom', // sender address
                         to: user.email, // list of receivers
-                        subject: 'Request to reset password from application', // Subject line
+                        subject: 'Reset password link from GuestHom', // Subject line
                         html: html // html body
                     };
 
@@ -160,8 +170,9 @@ exports.passwordresetrequest = function (req, res) {
         if (user == null) {
             res.json({data: null, is_error: true, message: 'email not exit'});
         } else { 
-            var transporter = nodemailer.createTransport('smtps://develapptodate%40gmail.com:0503636776@smtp.gmail.com');
-                var replace_var = {
+            var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465"); 
+            
+            var replace_var = {
                     username: user.name,
                     password: new_password,
                     link: config.CLIENT_URL + 'api/users/resetpassword/'+ user.id
@@ -169,9 +180,9 @@ exports.passwordresetrequest = function (req, res) {
                 var templates = new EmailTemplates();
                 templates.render(templatesDir + '/forgopassword.html', replace_var, function (err, html, text) {
                     var mailOptions = {
-                        from: 'develapptodate@gmail.com', // sender address
+                        from: 'ndsnaren@gmail.com', // sender address
                         to: user.email, // receiver
-                        subject: 'Request to reset password from application', // Subject line
+                        subject: 'Request to reset password from Guesthom', // Subject line
                         html: html // html body
                     };
 
@@ -237,7 +248,7 @@ exports.resetpasswordsubmit = function(req,res){
     
     Model.findOne({_id: user_id}, function (err, usr) {
         if (err) {
-            res.send(send_response(null, true, "לא נמצא משתמש"));
+            res.send(send_response(null, true, "User not found"));
         } else {
             usr.password = req.body.password;
             usr.save(function (err, saved) {
@@ -319,7 +330,7 @@ exports.UpdateUserReceviers = function(req, res){
                 if (err) {
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
-                    res.json({data: receiver, is_error: false, message: 'מקלט המשתמש עודכן בהצלחה'});
+                    res.json({data: receiver, is_error: false, message: 'User updated successfully'});
                 }
             });
         }
@@ -379,6 +390,10 @@ exports.sendOtp = function(req,res){
                 if (err) {
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
+                    var MessageOTP = userList.otp + " Is your One Time Password for Book your dream home!"
+                    msg91.send(req.body.phone_number, MessageOTP, function(err, response){
+                        console.log(response);
+                    });
                     res.send(send_response(userList));
                 }
             });
@@ -388,13 +403,14 @@ exports.sendOtp = function(req,res){
 
 exports.verifyOtp = function(req,res){
     var UserModel = mongoose.model('User');
-    console.log(req.body.firstDigit + req.body.secondDigit + req.body.thirdDigit + req.body.forthDigit);
     var concateOtp = req.body.firstDigit + req.body.secondDigit + req.body.thirdDigit + req.body.forthDigit;
-    console.log(concateOtp);
     UserModel.findOne({ 'otp': concateOtp },function(err,userList){
+        console.log(userList);
         if(err){
+            console.log("Here at first console");
             res.send(send_response(null,true,err));
         } else if(!userList) {
+            console.log("Here second console");
             res.send(send_response("notFound"));
         } else {
             userList.status = true;
@@ -402,6 +418,7 @@ exports.verifyOtp = function(req,res){
             var updated_receiver = userList;
             updated_receiver.save(function (err) {
                 if (err) {
+                    console.log("sgsfgsdfgsf")
                     res.send(send_response(null, true, parse_error(err)));
                 } else {
                     res.send(send_response("varified"));
