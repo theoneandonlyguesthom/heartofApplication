@@ -130,7 +130,7 @@ exports.forgotpassword = function (req, res) {
                     var mailOptions = {
                         from: 'develapptodate@gmail.com', // sender address
                         to: user.email, // list of receivers
-                        subject: 'Request to reset password from CommonNG-Pro application', // Subject line
+                        subject: 'Request to reset password from application', // Subject line
                         html: html // html body
                     };
 
@@ -171,7 +171,7 @@ exports.passwordresetrequest = function (req, res) {
                     var mailOptions = {
                         from: 'develapptodate@gmail.com', // sender address
                         to: user.email, // receiver
-                        subject: 'Request to reset password from CommonNG-Pro application', // Subject line
+                        subject: 'Request to reset password from application', // Subject line
                         html: html // html body
                     };
 
@@ -449,4 +449,3 @@ exports.getAreaList = function(req,res){
        }
     })
 }
-

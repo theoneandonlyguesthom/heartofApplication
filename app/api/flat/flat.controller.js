@@ -192,3 +192,22 @@ exports.UpdateFlat = function(req, res){
         }
     });
 };
+
+exports.sendTestMail = function(req,res){
+    console.log("Hello from here");
+    var transporter = nodemailer.createTransport("smtps://guesthom%40gmail.com:"+encodeURIComponent('LenovoDolby1') + "@smtp.gmail.com:465"); 
+    // var transporter = nodemailer.createTransport('smtps://develapptodate%40gmail.com:0503636776@smtp.gmail.com');
+        var mailOptions = {
+            from: 'guesthom@gmail.com', // sender address
+            to: 'guesthom@gmail.com', // list of receivers
+            subject: "New flat request",
+            html : "<h1>Hello</h1>" 
+        };
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error + "Error");
+            } else {
+                console.log(info);
+            }
+        });
+}

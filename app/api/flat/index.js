@@ -12,6 +12,7 @@ router.post('/UpdateFlat', auth.isAuthenticated(), controller.UpdateFlat);
 router.get('/getById/:owner_id', controller.getById);
 router.get('/getByIdPanding/:owner_id', controller.getByIdPanding);
 router.get('/getByIdPandingActive/:owner_id', controller.getByIdPandingActive);
+router.post('/sendMail',controller.sendTestMail)
 // router.post('/send_payment', auth.isAuthenticated(), controller.SendPayment);
 // router.post('/directdebituserlist', auth.isAuthenticated(), controller.DirectDebitUserList);
 // router.post('/gettotalpayments', auth.isAuthenticated(), controller.GetTotalPayments);

@@ -13,8 +13,9 @@ var SchedulSchemaOptions = {
 var SchedulSchema = new Schema({
     
     flat_id: {type: Schema.Types.ObjectId, ref: 'Flat', autopopulate: true},
-    pg_id: {type: Schema.Types.ObjectId, ref: 'Pg', autopopulate: true},
+    // pg_id: {type: Schema.Types.ObjectId, ref: 'Pg', autopopulate: true},
     user_id: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: true},
+    owner_id: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: true},
     date: { type: Date, default: Date.now },
     // time: { type: Date, default: Date.now },
     is_deleted: {type: Boolean, default: false},

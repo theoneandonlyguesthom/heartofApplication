@@ -5,6 +5,7 @@ var fs = require('fs');
 var async = require('async');
 
 exports.uploadFile = function (req, res) {
+    debugger;
     console.log('Callling ...........')
     res.send(send_response(req.file.filename, false, "File uploaded"));
 }

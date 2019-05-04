@@ -7,11 +7,13 @@ var router = express.Router();
 
 router.post('/addPg', auth.isAuthenticated(), controller.addPg);
 router.get('/getAllPgs', auth.isAuthenticated(), controller.getAllPgs);
+router.get('/getPendingHomesAndPGs', controller.getPendingHomesAndPGs);
 router.get('/getAllPgswithoutlogin', controller.getAllPgs);
 router.get('/getHomeListByGender/:whom',controller.getHomeListByGender);
 router.get('/getHomeListByArea/:area',controller.getHomeListByArea);
 router.get('/getFilteredItem/:price/:tenantType',controller.getFilteredItem);
-router.post('/UpdatePg', auth.isAuthenticated(), controller.UpdatePg);
+router.post('/UpdatePg', controller.UpdatePg);
+router.get('/sendMail', controller.sendTempMail);
 
 // router.post('/send_payment', auth.isAuthenticated(), controller.SendPayment);
 // router.post('/directdebituserlist', auth.isAuthenticated(), controller.DirectDebitUserList);
