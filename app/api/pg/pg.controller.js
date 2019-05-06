@@ -221,7 +221,7 @@ exports.getHomeListByArea = function(req,res){
     })
 
 }
-
+ 
 exports.getPendingHomesAndPGs = function(req,res){
     var PgModel = mongoose.model('Pg');
     var FlatModel = mongoose.model('Flat');
