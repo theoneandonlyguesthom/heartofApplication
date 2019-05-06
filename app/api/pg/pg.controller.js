@@ -45,44 +45,44 @@ exports.UpdateFlat = function(req, res){
 
 
 
-// exports.getPendingHomesAndPGs = function(req,res){
-//     var PgModel = mongoose.model('Pg');
-//     var FlatModel = mongoose.model('Flat');
-//     var areaListArry = [];
+exports.getPendingHomesAndPGs = function(req,res){
+    var PgModel = mongoose.model('Pg');
+    var FlatModel = mongoose.model('Flat');
+    var areaListArry = [];
 
-//     async.waterfall([
-//         function(callback){
-//             FlatModel.find({},function(err,areaListFlat){
-//                 if(err){
-//                     callback(null,err);
-//                 } else {
-//                     areaListFlat.forEach(function(item) { 
-//                         areaListArry.push(item);
-//                     })
-//                     callback(null,areaListArry);
-//                 }
-//             })
-//         },function(areaListArry,callback){
-//             PgModel.find({},function(err,areaListFlat){
-//                 if(err){
-//                     callback(null,err);
-//                 } else {
-//                     areaListFlat.forEach(function(item) { 
-//                         areaListArry.push(item);
-//                     })
-//                     callback(null,areaListArry);
-//                 }
-//             })
-//         }
-//     ],function(error,result){
-//         if(error){
-//            res.send(send_response(null,true,error)); 
-//        } else {
-//         res.send(send_response(result,false,"Success"));
-//        }
-//     })
+    async.waterfall([
+        function(callback){
+            FlatModel.find({},function(err,areaListFlat){
+                if(err){
+                    callback(null,err);
+                } else {
+                    areaListFlat.forEach(function(item) { 
+                        areaListArry.push(item);
+                    })
+                    callback(null,areaListArry);
+                }
+            })
+        },function(areaListArry,callback){
+            PgModel.find({},function(err,areaListFlat){
+                if(err){
+                    callback(null,err);
+                } else {
+                    areaListFlat.forEach(function(item) { 
+                        areaListArry.push(item);
+                    })
+                    callback(null,areaListArry);
+                }
+            })
+        }
+    ],function(error,result){
+        if(error){
+           res.send(send_response(null,true,error)); 
+       } else {
+        res.send(send_response(result,false,"Success"));
+       }
+    })
 
-// }
+}
 
 
 const sgMail = require('@sendgrid/mail');
@@ -222,43 +222,43 @@ exports.getHomeListByArea = function(req,res){
 
 }
  
-exports.getPendingHomesAndPGs = function(req,res){
-    var PgModel = mongoose.model('Pg');
-    var FlatModel = mongoose.model('Flat');
-    var areaListArry = [];
+// exports.getPendingHomesAndPGs = function(req,res){
+//     var PgModel = mongoose.model('Pg');
+//     var FlatModel = mongoose.model('Flat');
+//     var areaListArry = [];
 
-    async.waterfall([
-        function(callback){
-            FlatModel.find({status:false},function(err,areaListFlat){
-                if(err){
-                    callback(null,err);
-                } else {
-                    areaListFlat.forEach(function(item) { 
-                        areaListArry.push(item);
-                    })
-                    callback(null,areaListArry);
-                }
-            })
-        },function(areaListArry,callback){
-            PgModel.find({status:false},function(err,areaListFlat){
-                if(err){
-                    callback(null,err);
-                } else {
-                    areaListFlat.forEach(function(item) { 
-                        areaListArry.push(item);
-                    })
-                    callback(null,areaListArry);
-                }
-            })
-        }
-    ],function(error,result){
-        if(error){
-           res.send(send_response(null,true,error)); 
-       } else {
-        res.send(send_response(result,false,"Success"));
-       }
-    })
-}
+//     async.waterfall([
+//         function(callback){
+//             FlatModel.find({status:false},function(err,areaListFlat){
+//                 if(err){
+//                     callback(null,err);
+//                 } else {
+//                     areaListFlat.forEach(function(item) { 
+//                         areaListArry.push(item);
+//                     })
+//                     callback(null,areaListArry);
+//                 }
+//             })
+//         },function(areaListArry,callback){
+//             PgModel.find({status:false},function(err,areaListFlat){
+//                 if(err){
+//                     callback(null,err);
+//                 } else {
+//                     areaListFlat.forEach(function(item) { 
+//                         areaListArry.push(item);
+//                     })
+//                     callback(null,areaListArry);
+//                 }
+//             })
+//         }
+//     ],function(error,result){
+//         if(error){
+//            res.send(send_response(null,true,error)); 
+//        } else {
+//         res.send(send_response(result,false,"Success"));
+//        }
+//     })
+// }
 exports.filterAPI = function(req,res){
     var tenantType = req.body.tenantType;
     var filterPrice = req.body.price;
