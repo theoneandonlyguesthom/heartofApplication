@@ -222,43 +222,43 @@ exports.getHomeListByArea = function(req,res){
 
 }
 
-exports.getPendingHomesAndPGs = function(req,res){
-    var PgModel = mongoose.model('Pg');
-    var FlatModel = mongoose.model('Flat');
-    var areaListArry = [];
+// exports.getPendingHomesAndPGs = function(req,res){
+//     var PgModel = mongoose.model('Pg');
+//     var FlatModel = mongoose.model('Flat');
+//     var areaListArry = [];
 
-    async.waterfall([
-        function(callback){
-            FlatModel.find({status:false},function(err,areaListFlat){
-                if(err){
-                    callback(null,err);
-                } else {
-                    areaListFlat.forEach(function(item) { 
-                        areaListArry.push(item);
-                    })
-                    callback(null,areaListArry);
-                }
-            })
-        },function(areaListArry,callback){
-            PgModel.find({status:false},function(err,areaListFlat){
-                if(err){
-                    callback(null,err);
-                } else {
-                    areaListFlat.forEach(function(item) { 
-                        areaListArry.push(item);
-                    })
-                    callback(null,areaListArry);
-                }
-            })
-        }
-    ],function(error,result){
-        if(error){
-           res.send(send_response(null,true,error)); 
-       } else {
-        res.send(send_response(result,false,"Success"));
-       }
-    })
-}
+//     async.waterfall([
+//         function(callback){
+//             FlatModel.find({status:false},function(err,areaListFlat){
+//                 if(err){
+//                     callback(null,err);
+//                 } else {
+//                     areaListFlat.forEach(function(item) { 
+//                         areaListArry.push(item);
+//                     })
+//                     callback(null,areaListArry);
+//                 }
+//             })
+//         },function(areaListArry,callback){
+//             PgModel.find({status:false},function(err,areaListFlat){
+//                 if(err){
+//                     callback(null,err);
+//                 } else {
+//                     areaListFlat.forEach(function(item) { 
+//                         areaListArry.push(item);
+//                     })
+//                     callback(null,areaListArry);
+//                 }
+//             })
+//         }
+//     ],function(error,result){
+//         if(error){
+//            res.send(send_response(null,true,error)); 
+//        } else {
+//         res.send(send_response(result,false,"Success"));
+//        }
+//     })
+// }
 exports.filterAPI = function(req,res){
     var tenantType = req.body.tenantType;
     var filterPrice = req.body.price;
@@ -425,45 +425,45 @@ exports.UpdatePg = function(req, res){
 
 exports.sendTempMail = function(req,res){
 
-    var templates = new EmailTemplates();
-    var replace_var = {
-        username: "Narendra",
-        password: "Solanki",
-        link: "This is the amezing if happen"
+    // var templates = new EmailTemplates();
+    // var replace_var = {
+    //     username: "Narendra",
+    //     password: "Solanki",
+    //     link: "This is the amezing if happen"
 
-    }
-    templates.render(templatesDir + '/newpgorflat.html', replace_var, function (err, html, text) {
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-        var mailOptions = {
-            from: 'ndsnaren@gmail.com', // sender address
-            to: 'ndsnaren@gmail.com', // list of receivers
-            subject: 'Request to reset password from application', // Subject line
-            html: html // html body
-        };
-        sgMail.send(mailOptions, function (error, info) {
-            if (error) {
-                res.json({data: error, is_error: true, message: 'Error sending email'});
-            } else {
-                res.json({data: data, is_error: false, message: 'Email sent to reset password'});
-            }
-        });
-    })
+    // }
+    // templates.render(templatesDir + '/newpgorflat.html', replace_var, function (err, html, text) {
+    //     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    //     var mailOptions = {
+    //         from: 'ndsnaren@gmail.com', // sender address
+    //         to: 'ndsnaren@gmail.com', // list of receivers
+    //         subject: 'Request to reset password from application', // Subject line
+    //         html: html // html body
+    //     };
+    //     sgMail.send(mailOptions, function (error, info) {
+    //         if (error) {
+    //             res.json({data: error, is_error: true, message: 'Error sending email'});
+    //         } else {
+    //             res.json({data: data, is_error: false, message: 'Email sent to reset password'});
+    //         }
+    //     });
+    // })
 
 
     console.log("Calling from here");
-    // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    // const msg = {
-    // to: 'ndsnaren@gmail.com',
-    // from: 'ndsnaren@gmail.com',
-    // subject: 'Sending with SendGrid is Fun',
-    // text: 'and easy to do anywhere, even with Node.js',
-    // html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-    // };
-    // sgMail.send(mailOptions, function (error, info) {
-    //     if (error) {
-    //         res.json({data: error, is_error: true, message: 'Error sending email'});
-    //     } else {
-    //         res.json({data: data, is_error: false, message: 'Email sent to reset password'});
-    //     }
-    // });
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+    to: 'ndsnaren@gmail.com',
+    from: 'ndsnaren@gmail.com',
+    subject: 'Sending with SendGrid is Fun',
+    text: 'and easy to do anywhere, even with Node.js',
+    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    };
+    sgMail.send(mailOptions, function (error, info) {
+        if (error) {
+            res.json({data: error, is_error: true, message: 'Error sending email'});
+        } else {
+            res.json({data: data, is_error: false, message: 'Email sent to reset password'});
+        }
+    });
 }
