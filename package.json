@@ -104,7 +104,7 @@
     "time-grunt": "~0.3.1"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": "6.x"
   },
   "scripts": {
     "start-pm2": "NODE_ENV=production pm2 start app/app.js --name='commonngpro'",
