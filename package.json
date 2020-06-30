@@ -19,7 +19,7 @@
     "errorhandler": "~1.0.0",
     "exceljs": "^0.5.0",
     "express": "~4.9.0",
-    "express-jwt": "^3.0.0",
+    "express-jwt": "^6.0.0",
     "express-session": "~1.0.2",
     "fcm-node": "^1.2.1",
     "hogan": "^1.0.2",
