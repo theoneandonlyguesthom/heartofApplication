@@ -26,7 +26,7 @@
     "http-parser-js": "^0.4.3",
     "image-downloader": "^2.0.0",
     "jsontoxml": "0.0.11",
-    "jsonwebtoken": "^5.0.0",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^2.4.2",
     "method-override": "~1.0.0",
     "moment": "^2.14.1",
